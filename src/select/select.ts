@@ -9,7 +9,7 @@ import {
   OnChanges,
   SimpleChanges
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SelectItem } from './select-item';
 import { stripTags } from './select-pipes';
@@ -153,9 +153,9 @@ let styles = `
       </span>
     </div>
     <input type="text" autocomplete="false" tabindex="-1"
+           [formControl]="formControl"    
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
-           [disabled]="disabled"
            class="form-control ui-select-search"
            *ngIf="inputMode"
            placeholder="{{active.length <= 0 ? placeholder : ''}}">
@@ -218,7 +218,7 @@ let styles = `
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
            (click)="matchClick($event)"
-           [disabled]="disabled"
+           [formControl]="formControl"
            autocomplete="false"
            autocorrect="off"
            autocapitalize="off"
@@ -269,8 +269,9 @@ export class SelectComponent implements OnInit, ControlValueAccessor, OnChanges 
   @Input() public textField:string = 'text';
   @Input() public childrenField:string = 'children';
   @Input() public multiple:boolean = false;
-
-  @Input()
+  @Input() public formControl = new FormControl(); 
+  
+@Input()
   public set items(value:Array<any>) {
     if (!value) {
       this._items = this.itemObjects = [];
